@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	<!--自动扫包 -->
+	<context:component-scan
+		base-package="com.qhit.service"></context:component-scan>
+	<!--加载db.properties -->
+	<context:property-placeholder
+		location="classpath:db.properties" />
+	<!-- 配置数据连接池 -->
+	<bean id="dataScore"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${mysql.driver}"></property>
+		<property name="jdbcUrl" value="${mysql.url}"></property>
+		<property name="user" value="${mysql.username}"></property>
+		<property name="password" value="${mysql.password}"></property>
+	</bean>
+	<!--sqlSessionFactory -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataScore"></property>
+		<property name="configLocation" value="classpath:mybatis.xml"></property>
+	</bean>
+	<!-- Mappr扫描器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.qhit.mappr"></property>
+		<property name="sqlSessionFactoryBeanName"
+			value="sqlSessionFactory"></property>
+	</bean>
+	<!-- 	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		上传文件大小10M,编码方式为utf-8
+		<property name="maxUploadSize" value="10485760" />
+		<property name="defaultEncoding">
+			<value>UTF-8</value>
+		</property>
+	</bean> -->
+</beans>
